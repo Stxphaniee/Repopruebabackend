@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import type { User } from '@PrismaClient';
+import type { RolUsuario, User } from '@PrismaClient';
 
 /**
  * Forma pública de un usuario.
  *
  * Los controladores devuelven esto y nunca la fila cruda de Prisma, para que
  * `passwordHash` no pueda filtrarse en una respuesta por descuido.
+ *
+ * Módulo 0 (b): respuesta { id, email, rol, activo }.
  */
 export class UserResponseDto {
   @ApiProperty({ format: 'uuid' })
@@ -14,18 +16,18 @@ export class UserResponseDto {
   @ApiProperty({ example: 'nestor@example.com', format: 'email' })
   email!: string;
 
-  @ApiProperty()
-  isActive!: boolean;
+  @ApiProperty({ enum: ['JUGADOR', 'CAPITAN', 'ARBITRO', 'ORGANIZADOR'] })
+  rol!: RolUsuario;
 
-  @ApiProperty({ type: String, format: 'date-time' })
-  createdAt!: Date;
+  @ApiProperty()
+  activo!: boolean;
 
   static fromEntity(user: User): UserResponseDto {
     return {
       id: user.id,
       email: user.email,
-      isActive: user.isActive,
-      createdAt: user.createdAt,
+      rol: user.rol,
+      activo: user.isActive,
     };
   }
 }

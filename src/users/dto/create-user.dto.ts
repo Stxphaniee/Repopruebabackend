@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsString, MaxLength, MinLength } from 'class-validator';
 import { IsNormalizedEmail } from '@Common/decorators';
 
 export class CreateUserDto {
@@ -13,7 +13,7 @@ export class CreateUserDto {
   email!: string;
 
   @ApiProperty({
-    description: 'Contraseña. Debe incluir al menos una minúscula, una mayúscula y un número.',
+    description: 'Contraseña (Módulo 0 b: obligatoria, 8–72 caracteres).',
     example: 'Str0ngPass',
     minLength: 8,
     maxLength: 72,
@@ -22,8 +22,5 @@ export class CreateUserDto {
   @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
   // bcrypt trunca silenciosamente en 72 bytes, así que se rechaza antes de hashear.
   @MaxLength(72, { message: 'La contraseña no puede superar los 72 caracteres.' })
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
-    message: 'La contraseña debe incluir al menos una minúscula, una mayúscula y un número.',
-  })
   password!: string;
 }

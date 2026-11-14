@@ -31,7 +31,10 @@ export class UsersService {
     } catch (error) {
       // Traduce el error de dominio del repositorio a una excepción HTTP.
       if (error instanceof EmailAlreadyTakenError) {
-        throw new ConflictException('El email ya está registrado.');
+        throw new ConflictException({
+          codigo: 'CORREO_DUPLICADO',
+          mensaje: 'El correo ya está registrado.',
+        });
       }
       throw error;
     }
